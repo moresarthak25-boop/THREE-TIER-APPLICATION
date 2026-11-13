@@ -1,0 +1,26 @@
+name: Build and Push backend Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish_images:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        run: |
+          docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Build backend Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/my-webapp-backend:latest ./backend
+
+      - name: Push backend Image
+        run: |
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/my-webapp-backend:latest
